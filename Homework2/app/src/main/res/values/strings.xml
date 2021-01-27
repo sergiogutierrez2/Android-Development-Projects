@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Sergio\'s Directory </string>
+    <string-array name="animals">
+        <item>Crocodile</item>
+        <item>Leopard</item>
+        <item>Lion</item>
+        <item>Tiger</item>
+        <item>Wolf</item>
+    </string-array>
+
+    <string-array name="description">
+        <item>Crocodiles are large semiaquatic reptiles.</item>
+        <item>The leopard is one of the five extant species in the genus Panthera, a member of the Felidae.</item>
+        <item>The lion is a species in the family Felidae and a member of the genus Panthera.</item>
+        <item>The tiger is the largest extant cat species and a member of the genus Panthera.</item>
+        <item>A wolf is a large canine native to Eurasia and North America.</item>
+    </string-array>
+</resources>
