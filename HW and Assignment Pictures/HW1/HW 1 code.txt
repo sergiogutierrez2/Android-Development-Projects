@@ -1,0 +1,334 @@
+Windows key + G or something to record
+
+Working code exercise 2:
+
+activity_main.xml
+----------------------
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.028" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="214dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/fifteen" />
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/twenty" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/thirty" />
+
+    </RadioGroup>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/calc"
+        android:onClick="onClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="614dp"
+        android:text="Taxes and Insurance "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="214dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="400dp"
+        android:max="20"
+        android:progress="10"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintRight_toRightOf="@id/button" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+---------------------
+
+
+MainActivity.java
+--------------------
+package edu.sjsu.android.homework1;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
+import android.widget.CheckBox;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+public class MainActivity extends Activity {
+    private EditText text;
+    SeekBar simpleSeekBar;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        text = (EditText) findViewById(R.id.editText);
+
+        simpleSeekBar = (SeekBar) findViewById(R.id.seekBar); // initiate the Seekbar
+        simpleSeekBar.setMax(20); // 20 maximum value for the Seek bar
+        simpleSeekBar.setProgress(10); // 10 default progress value
+        // simpleSeekBar.setText(String.valueOf(simpleSeekBar.getProgress()));
+        int seekValue = simpleSeekBar.getProgress();
+
+        simpleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            int progressChangedValue = 0;
+
+            public void onProgressChanged (SeekBar seekBar,int progress, boolean fromUser){
+                progressChangedValue = progress;
+            }
+
+            public void onStartTrackingTouch (SeekBar seekBar){
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch (SeekBar seekBar){
+                Toast.makeText(MainActivity.this, "Seek bar progress is :" + progressChangedValue,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // this method is called at button click because we assigned the name to the
+    // "OnClick property" of the button
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button:
+                RadioButton fifteenButton = (RadioButton)
+                        findViewById(R.id.radioButton);
+                RadioButton twentyButton = (RadioButton)
+                        findViewById(R.id.radioButton1);
+                RadioButton thirtyButton = (RadioButton)
+                        findViewById(R.id.radioButton2);
+                if (text.getText().length() == 0) {
+                    Toast.makeText(this, "Please enter a valid number",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                float inputValue = Float.parseFloat(text.getText().toString());
+                final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+                float taxInsurance = (float) (inputValue * 0.001);
+                float noTax = 0;
+                /*
+                simpleSeekBar = (SeekBar) findViewById(R.id.seekBar); // initiate the Seekbar
+                simpleSeekBar.setMax(20); // 20 maximum value for the Seek bar
+                simpleSeekBar.setProgress(10); // 10 default progress value
+                // simpleSeekBar.setText(String.valueOf(simpleSeekBar.getProgress()));
+                int seekValue = simpleSeekBar.getProgress();*/
+
+
+                if (fifteenButton.isChecked()) {
+                    if (checkBox.isChecked()) {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToFifteen(inputValue, taxInsurance, simpleSeekBar.getProgress())));
+                    } else {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToFifteen(inputValue, noTax, simpleSeekBar.getProgress())));
+                    }
+
+                    fifteenButton.setChecked(true);
+                    twentyButton.setChecked(false);
+                    thirtyButton.setChecked(false);
+
+                } else if (twentyButton.isChecked()) {
+                    if (checkBox.isChecked()) {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToTwenty(inputValue, taxInsurance, simpleSeekBar.getProgress())));
+                    } else {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToTwenty(inputValue, noTax, simpleSeekBar.getProgress())));
+                    }
+                    twentyButton.setChecked(true);
+                    fifteenButton.setChecked(false);
+                    thirtyButton.setChecked(false);
+                } else {
+                    if (checkBox.isChecked()) {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToThirty(inputValue, taxInsurance, simpleSeekBar.getProgress())));
+                    } else {
+                        text.setText(String
+                                .valueOf(MortgageCalculator.convertToThirty(inputValue, noTax, simpleSeekBar.getProgress())));
+                    }
+                    thirtyButton.setChecked(true);
+                    fifteenButton.setChecked(false);
+                    twentyButton.setChecked(false);
+                }
+
+                break;
+        }
+    }
+
+
+
+}
+
+
+
+--------------------
+
+
+strings.xml
+--------------------
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mortgage Calculator</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="fifteen">15</string>
+    <string name="twenty">20</string>
+    <string name="thirty">30</string>
+    <string name="calc">Calculate</string>
+</resources>
+--------------------
+
+
+MortgageCalculator.java
+--------------------
+package edu.sjsu.android.homework1;
+
+import java.text.NumberFormat;
+import android.widget.SeekBar;
+
+public class MortgageCalculator {
+
+    public static double convertToFifteen(float fifteen, float taxorno, int seekValue) {
+        if (seekValue == 0){
+        return (double) ((fifteen / (15*12.00)) + (taxorno));
+        }
+        else
+        {
+            double num = (seekValue/1200.00);
+            double num2 = 1.00- Math.pow(1.00+(num), -180.00);
+            double num3 = (fifteen * (num/num2)) + (taxorno);
+            return num3;
+        }
+    }
+
+
+    public static double convertToTwenty(float twenty, float taxorno, int seekValue) {
+        if (seekValue == 0){
+        return (float) ((twenty / (20*12.00)) + (taxorno));}
+        else
+        {
+            double num = (seekValue/1200.00);
+            double num2 = 1.00- Math.pow(1.00+(num), -240.00);
+            double num3 = (twenty * (num/num2)) + (taxorno);
+            return num3;
+        }
+    }
+
+    public static double convertToThirty(float thirty, float taxorno, int seekValue) {
+        if (seekValue == 0){
+        return (float) ((thirty / (30*12.00)) + (taxorno));}
+        else
+        {
+            double num = (seekValue/1200.00);
+            double num2 = 1.00- Math.pow(1.00+(num), -360.00);
+            double num3 = (thirty * (num/num2)) + (taxorno);
+            return num3;
+        }
+    }
+}
+
+
+--------------------
+
+
+styles.xml
+--------------------
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+</resources>
+--------------------
+
+
+AndroidManifest.xml
+--------------------
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.sjsu.android.homework1">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true">
+      //  android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+--------------------
