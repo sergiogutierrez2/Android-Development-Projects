@@ -1,7 +1,3 @@
-Windows key + G or something to record
-
-Working code exercise 2:
-
 activity_main.xml
 ----------------------
 <?xml version="1.0" encoding="utf-8"?>
