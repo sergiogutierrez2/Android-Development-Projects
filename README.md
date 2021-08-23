@@ -1,6 +1,6 @@
 # Android-Development-Projects in Java
 
-**Examples of Some Apps developed with Android Studio**
+**Examples of Some Mobile Apps developed with Android Studio**
 
 ![alt text](https://github.com/sergiogutierrez2/Android-Development-Projects/blob/master/Java%20App%20Pictures/17.png)
 
